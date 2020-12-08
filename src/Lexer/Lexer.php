@@ -84,31 +84,11 @@ final class Lexer
                 'n' => "\n",
                 'r' => "\r",
                 't' => "\t",
-                'u' => $this->getCharacterByCodePoint(),
                 default => '\\' . $ch,
             };
         }
 
         throw new LexerException('No end of string');
-    }
-
-    private function getCharacterByCodePoint(): string
-    {
-        $codepoint = '';
-        for ($i = 0; $i < 4; $i++) {
-            $ch = $this->consume();
-            if ($ch !== null
-                && ('0' <= $ch && $ch <= '9'
-                    || 'A' <= $ch && $ch <= 'F'
-                    || 'a' <= $ch && $ch <= 'f')) {
-                $codepoint .= $ch;
-                continue;
-            }
-
-            throw new LexerException('Invalid code point');
-        }
-
-        return mb_chr(hexdec($codepoint));
     }
 
     /**
@@ -117,113 +97,19 @@ final class Lexer
     private function getNumberToken(string $ch): NumberToken
     {
         $number = $ch;
-        $state = match ($ch) {
-            '-' => 'MINUS',
-            '0' => 'INT_ZERO',
-            default => 'INT',
-        };
-        $isFloat = false;
-
-        $isDigit19 = fn($ch) => '1' <= $ch && $ch <= '9';
-        $isDigit = fn($ch) => '0' <= $ch && $ch <= '9';
-        $isExp = fn($ch) => $ch === 'e' || $ch === 'E';
 
         while (true) {
             $ch = $this->current();
-            switch ($state) {
-                case 'INT':
-                    if ($isDigit($ch)) {
-                        $number .= $this->consume();
-                        break;
-                    }
-
-                    if ($ch === '.') {
-                        $number .= $this->consume();
-                        $state = 'DECIMAL_POINT';
-                        break;
-                    }
-
-                    if ($isExp($ch)) {
-                        $number .= $this->consume();
-                        $state = 'EXP';
-                        break;
-                    }
-
-                    break 2;
-                case 'MINUS':
-                    if ($isDigit19($ch)) {
-                        $number .= $this->consume();
-                        $state = 'INT';
-                        break;
-                    }
-
-                    if ($ch === '0') {
-                        $number .= $this->consume();
-                        $state = 'INT_ZERO';
-                        break;
-                    }
-
-                    break 2;
-                case 'INT_ZERO':
-                    if ($ch === '.') {
-                        $number .= $this->consume();
-                        $state = 'DECIMAL_POINT';
-                        break;
-                    }
-                    if ($isDigit($ch)) {
-                        throw new LexerException('Invalid number:' . $ch);
-                    }
-
-                    break 2;
-                case 'DECIMAL_POINT':
-                    $isFloat = true;
-                    if ($isDigit($ch)) {
-                        $number .= $this->consume();
-                        $state = 'DECIMAL_POINT_INT';
-                        break;
-                    }
-
-                    break 2;
-                case 'DECIMAL_POINT_INT':
-                    if ($isDigit($ch)) {
-                        $number .= $this->consume();
-                        break;
-                    }
-
-                    if ($isExp($ch)) {
-                        $number .= $this->consume();
-                        $state = 'EXP';
-                        break;
-                    }
-
-                    break 2;
-                case 'EXP':
-                    $isFloat = true;
-                    if ($isDigit($ch) || $ch === '-' || $ch === '+') {
-                        $number .= $this->consume();
-                        $state = 'EXP_INT';
-                        break;
-                    }
-
-                    break 2;
-                case 'EXP_INT':
-                    if ($isDigit($ch)) {
-                        $number .= $this->consume();
-                        break;
-                    }
-
-                    break 2;
-                default:
-                    break 2;
+            if ('0' <= $ch && $ch <= '9') {
+                $number .= $ch;
+                $this->consume();
+                continue;
             }
+
+            break;
         }
 
-        $lastCh = mb_substr($number, -1, 1);
-        if ('0' <= $lastCh && $lastCh <= '9') {
-            return new NumberToken($isFloat ? (float)$number : (int)$number);
-        }
-
-        throw new LexerException('Invalid number:' . $ch);
+        return new NumberToken((int)$number);
     }
 
     private function getLiteralToken(string $expectedName, string $klass): TrueToken|FalseToken|NullToken

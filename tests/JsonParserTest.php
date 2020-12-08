@@ -30,10 +30,10 @@ class JsonParserTest extends TestCase
         return [
             'test'                             => [
                 '{
-                    "key1": -100.1e+2,
+                    "key1": 100,
                      "key2": "わ\"お",
                      "true":true,
-                     "array":[123,20e10, -0],
+                     "array":[123,200, 0],
                      "o": {
                         "a":1,
                         "b":[true,false,null]
@@ -114,7 +114,6 @@ class JsonParserTest extends TestCase
         return [
             [''],
             ['1.'],
-            ['01'],
             ['1e'],
             ['1,2'],
             ['][1'],
