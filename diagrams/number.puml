@@ -1,0 +1,29 @@
+@startuml
+
+left to right direction
+
+[*] --> START
+START --> MINUS : -
+MINUS --> INT_ZERO : 0
+MINUS --> INT : 1-9
+
+START --> INT_ZERO : 0
+INT_ZERO --> DECIMAL_POINT : .
+INT_ZERO --> [*]
+
+START --> INT : 1-9
+INT --> INT : 0-9
+INT --> DECIMAL_POINT : .
+INT --> [*]
+
+DECIMAL_POINT -->DECIMAL_POINT_INT : 0-9
+INT --> EXP : e or E
+DECIMAL_POINT_INT --> [*]
+DECIMAL_POINT_INT --> EXP : e or E
+DECIMAL_POINT_INT --> DECIMAL_POINT_INT : 0-9
+
+EXP --> EXP_INT : - or + or 0-9
+EXP_INT --> EXP_INT : 0-9
+EXP_INT --> [*]
+
+@enduml

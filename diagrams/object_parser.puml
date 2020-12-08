@@ -1,0 +1,14 @@
+@startuml
+
+left to right direction
+
+[*] --> START
+START --> [*] : RightCurlyBracket
+START --> KEY : String
+KEY --> COLON : Colon
+COLON --> VALUE : Value
+VALUE --> COMMA : Comma
+VALUE --> [*] : RightCurlyBracket
+COMMA --> KEY : String
+
+@enduml

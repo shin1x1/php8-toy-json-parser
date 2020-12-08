@@ -1,0 +1,12 @@
+@startuml
+
+left to right direction
+
+[*] --> START
+START --> [*] : RightSquareBracket
+START --> VALUE : Value
+VALUE --> COMMA : Comma
+VALUE --> [*] : RightSquareBracket
+COMMA --> VALUE : Value
+
+@enduml
