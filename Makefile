@@ -11,7 +11,7 @@ clean:
 	docker-compose down
 
 bench-no-jit:
-	docker-compose run --rm php-ci php -dopcache.enable=1 -dopcache.enable_cli=1 -dopcache.jit=off -dopcahe.jit_buffer_size=0 benchmark/bench.php
+	docker-compose run --rm php-ci php -dopcache.enable=1 -dopcache.enable_cli=1 -dopcache.jit=0 -dopcache.jit_buffer_size=0 benchmark/bench.php
 
 bench-jit:
-	docker-compose run --rm php-ci php -dopcache.enable=1 -dopcache.enable_cli=1 -dopcache.jit=on -dopcahe.jit_buffer_size=100M benchmark/bench.php
+	docker-compose run --rm php-ci php -dopcache.enable=1 -dopcache.enable_cli=1 -dopcache.jit=1 -dopcache.jit_buffer_size=100M benchmark/bench.php
