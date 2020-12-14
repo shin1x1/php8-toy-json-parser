@@ -19,14 +19,14 @@ final class ValueParser
 {
     public static function parse(Lexer $lexer, Token $token): array|string|int|float|bool|null
     {
-        return match ($token::class) {
-            LeftSquareBracketToken::class => ArrayParser::parse($lexer),
-            StringToken::class => $token->getValue(),
-            NumberToken::class => $token->getValue(),
-            TrueToken::class => true,
-            FalseToken::class => false,
-            NullToken::class => null,
-            LeftCurlyBracketToken::class => ObjectParser::parse($lexer),
+        return match (true) {
+            $token instanceof LeftSquareBracketToken => ArrayParser::parse($lexer),
+            $token instanceof StringToken => $token->getValue(),
+            $token instanceof NumberToken => $token->getValue(),
+            $token instanceof TrueToken => true,
+            $token instanceof FalseToken => false,
+            $token instanceof NullToken => null,
+            $token instanceof LeftCurlyBracketToken => ObjectParser::parse($lexer),
             default => throw new ParserException(token: $token),
         };
     }
