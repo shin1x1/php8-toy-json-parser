@@ -218,7 +218,7 @@ final class Lexer
             }
         }
 
-        $lastCh = mb_substr($number, -1, 1);
+        $lastCh = substr($number, -1, 1);
         if ('0' <= $lastCh && $lastCh <= '9') {
             return new NumberToken($isFloat ? (float)$number : (int)$number);
         }
@@ -249,7 +249,7 @@ final class Lexer
 
     private function current(): string
     {
-        return mb_substr($this->json, $this->position, 1);
+        return substr($this->json, $this->position, 1);
     }
 
     private function consume(): ?string
