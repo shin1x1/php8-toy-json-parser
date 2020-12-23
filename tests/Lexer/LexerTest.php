@@ -85,10 +85,10 @@ class LexerTest extends TestCase
             ],
             'string'           => [
                 [
-                    new StringToken("ab\"\\/\f\n\r\tc\\z好"),
+                    new StringToken("あab\"\\/\f\n\r\tc\\z好"),
                     new EofToken(),
                 ],
-                '"ab\"\\\/\f\n\r\tc\z\u597D"'
+                '"あab\"\\\/\f\n\r\tc\z\u597D"'
             ],
             'number'           => [
                 [
