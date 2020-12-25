@@ -27,7 +27,7 @@ final class Lexer
 
     public function __construct(#[Immutable] private string $json)
     {
-        $this->length = mb_strlen($this->json);
+        $this->length = strlen($this->json);
         $this->position = 0;
     }
 
@@ -218,7 +218,7 @@ final class Lexer
             }
         }
 
-        $lastCh = mb_substr($number, -1, 1);
+        $lastCh = $number[strlen($number) - 1];
         if ('0' <= $lastCh && $lastCh <= '9') {
             return new NumberToken($isFloat ? (float)$number : (int)$number);
         }
@@ -249,7 +249,7 @@ final class Lexer
 
     private function current(): string
     {
-        return mb_substr($this->json, $this->position, 1);
+        return $this->json[$this->position] ?? '';
     }
 
     private function consume(): ?string
